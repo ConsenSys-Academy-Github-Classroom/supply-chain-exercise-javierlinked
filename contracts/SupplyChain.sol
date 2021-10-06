@@ -182,4 +182,8 @@ contract SupplyChain {
       buyer = items[_sku].buyer; 
       return (name, sku, price, state, seller, buyer); 
    } 
+
+   function() external {
+    revert();
+  }
 }
