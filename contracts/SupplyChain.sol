@@ -67,7 +67,8 @@ contract SupplyChain {
     _;
     uint _price = items[_sku].price;
     uint amountToRefund = msg.value - _price;
-    items[_sku].buyer.transfer(amountToRefund);
+    (bool success, ) = items[_sku].buyer.call.value(amountToRefund)("");
+    require(success, "Transfer failed.");
   }
 
   // For each of the following modifiers, use what you learned about modifiers
@@ -146,7 +147,10 @@ contract SupplyChain {
     {
         items[sku].buyer = msg.sender;
         items[sku].state = State.Sold;
-        items[sku].seller.transfer(items[sku].price);
+
+        (bool success, ) = items[sku].seller.call.value(items[sku].price)("");
+        require(success, "Transfer failed.");
+
         emit LogSold(sku);
     }
 
